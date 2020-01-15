@@ -1,0 +1,22 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "rpn calc",
+  "main": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^2.0.2",
+    "strscan": "^1.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "jasmine": "^3.5.0"
+  },
+  "scripts": {
+    "start": "nodemon --exec babel-node ./src/index.js",
+    "test": "babel-node spec/run.js"
+  }
+}
