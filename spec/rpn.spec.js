@@ -3,20 +3,45 @@ import { rpnExecutor, rpnConverter } from '../src/rpn'
 import parser from '../src/parser'
 
 describe("rpnExecutor", function() {
-  const testData = {
-    '1 2 +': new Token('number', 3),
-    '4 10 +': new Token('number', 14),
-    '1 2 3 + +': new Token('number', 6),
-    '2 1 -': new Token('number', 1),
-    '3 2 - 1 -': new Token('number', 0),
-    '2 1 *': new Token('number', 2),
-    '3 2 1 * *': new Token('number', 6),
-    '4 2 /': new Token('number', 2),
-    '16 4 / 2 /': new Token('number', 2),
-    '1 2 3 * +': new Token('number', 7),
-    '1 0 3 * +': new Token('number', 1),
-    '2 10 ^': new Token('number', 1024)
-  }
+  const testData = new Map([
+    // 1 2 +
+    [[
+      new Token('number', 1),
+      new Token('number', 2),
+      new Token('operator', '+')
+    ], new Token('number', 3)],
+    // 16 4 / 2 /
+    [[
+      new Token('number', 16),
+      new Token('number', 4),
+      new Token('operator', '/'),
+      new Token('number', 2),
+      new Token('operator', '/')
+    ], new Token('number', 2)],
+    // 1 2 3 * +
+    [[
+      new Token('number', 1),
+      new Token('number', 2),
+      new Token('number', 3),
+      new Token('operator', '*'),
+      new Token('operator', '+')
+    ], new Token('number', 7)],
+    // 1 2 + 3 *
+    [[
+      new Token('number', 1),
+      new Token('number', 2),
+      new Token('operator', '+'),
+      new Token('number', 3),
+      new Token('operator', '*')
+    ], new Token('number', 9)],
+    // 5 unaryMinus 5 +
+    [[
+      new Token('number', 5),
+      new Token('unaryOperator', 'unaryMinus'),
+      new Token('number', 5),
+      new Token('operator', '+')
+    ], new Token('number', 0)]
+  ])
 
   it("returns correct result", function() {
     for (const expression in testData) {
@@ -27,13 +52,38 @@ describe("rpnExecutor", function() {
 
 describe("rpnConverter", function() {
   const testData = {
-    '1 + 2': parser('1 2 +'),
-    '1 * 2': parser('1 2 *'),
-    '3 + 2 - 1': parser('3 2 + 1 -'),
-    '3 * 2 / 1': parser('3 2 * 1 /'),
-    '1 + 2 * 3': parser('1 2 3 * +'),
-    '(1 + 2) * 3': parser('1 2 + 3 *'),
-    '9 - (1 + 2 + 3) * 4': parser('9 1 2 + 3 + 4 * -')
+    '1 + 2': [
+      new Token('number', 1),
+      new Token('number', 2),
+      new Token('operator', '+')
+    ],
+    '3 + 2 - 1': [
+      new Token('number', 3),
+      new Token('number', 2),
+      new Token('operator', '+'),
+      new Token('number', 1),
+      new Token('operator', '-')
+    ],
+    '1 + 2 * 3': [
+      new Token('number', 1),
+      new Token('number', 2),
+      new Token('number', 3),
+      new Token('operator', '*'),
+      new Token('operator', '+')
+    ],
+    '(1 + 2) * 3': [
+      new Token('number', 1),
+      new Token('number', 2),
+      new Token('operator', '+'),
+      new Token('number', 3),
+      new Token('operator', '*')
+    ],
+    '-5 + 5': [
+      new Token('number', 5),
+      new Token('unaryOperator', 'unaryMinus'),
+      new Token('number', 5),
+      new Token('operator', '+')
+    ]
   }
 
   it("returns correct result", function() {

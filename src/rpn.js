@@ -8,10 +8,17 @@ const rpnExecutor = (tokens) => {
     if (token.isNumber()) {
       stack.push(token)
     } else {
-      const second = stack.pop()
-      const first = stack.pop()
+      // if (token.value == 'unaryPlus' || token.value == 'unaryMinus') {
+      if (token.type == 'unaryOperator') {
+        const first = stack.pop()
 
-      stack.push(new Token('number', OPERATORS[token.value].fn(first.value, second.value)))
+        stack.push(new Token('number', OPERATORS[token.value].fn(first.value)))
+      } else {
+        const second = stack.pop()
+        const first = stack.pop()
+
+        stack.push(new Token('number', OPERATORS[token.value].fn(first.value, second.value)))
+      }
     }
   })
 
@@ -29,7 +36,7 @@ const rpnConverter = (tokens) => {
   tokens.forEach((token) => {
     if (token.isNumber()) {
       output.push(token)
-    } else if (token.type == 'operator') {
+    } else if (token.type == 'operator' || token.type == 'unaryOperator') {
       const lastStackElement = stack[stack.length - 1]
       const currOp = OPERATORS[token.value]
       let lastOp = lastStackElement && OPERATORS[lastStackElement.value]

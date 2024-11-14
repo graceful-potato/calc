@@ -9,7 +9,9 @@ describe("rpnExecutor", function() {
     '1 + 2 * 3': 7,
     '(1 + 2) * 3': 9,
     '9 - (1 + 2 + 3) * 4': -15,
-    '2 ^ 2 ^ 2': 16
+    '2 ^ 2 ^ 2': 16,
+    '-5 + 5': 0,
+    '-(-5) + -10': -5
   }
 
   it("returns correct result", function() {

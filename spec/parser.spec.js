@@ -8,10 +8,24 @@ describe("rpnExecutor", function() {
       new Token('operator', '+'),
       new Token('number', 30)
     ],
+    '-30': [
+      new Token('unaryOperator', 'unaryMinus'),
+      new Token('number', 30)
+    ],
+    '+10': [
+      new Token('unaryOperator', 'unaryPlus'),
+      new Token('number', 10)
+    ],
     '12.32 - 0.32': [
       new Token('number', 12.32),
       new Token('operator', '-'),
       new Token('number', 0.32)
+    ],
+    '-5 + 5': [
+      new Token('unaryOperator', 'unaryMinus'),
+      new Token('number', 5),
+      new Token('operator', '+'),
+      new Token('number', 5)
     ],
     '2.5 * 20': [
       new Token('number', 2.5),

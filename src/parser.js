@@ -18,7 +18,14 @@ const parser = (query) => {
     if (value = str.scan(NUMBER)) {
       tokens.push(new Token('number', Number(value)))
     } else if (value = str.scan(OPERATOR)) {
-      tokens.push(new Token('operator', value))
+      const lastToken = tokens[tokens.length - 1]
+
+      if ((value == '+' || value == '-') && (!lastToken || (lastToken.value != ')' && lastToken.type != 'number'))) {
+        const op = value == '-' ? "unaryMinus" : "unaryPlus"
+        tokens.push(new Token('unaryOperator', op))
+      } else {
+        tokens.push(new Token('operator', value))
+      }
     } else if (value = str.scan(PARENTHESIS)) {
       tokens.push(new Token('parenthesis', value))
     } else {
